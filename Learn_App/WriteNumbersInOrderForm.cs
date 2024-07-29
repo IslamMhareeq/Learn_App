@@ -8,12 +8,16 @@ namespace Learn_App
     {
         private Random random = new Random();
         private int[] shuffledNumbers;
-        private Timer colorResetTimer;
+        private System.Windows.Forms.Timer colorResetTimer = new System.Windows.Forms.Timer(); // Initialize here
+        private User currentUser;
+        private UserManager userManager;
 
-        public WriteNumbersInOrderForm()
+        public WriteNumbersInOrderForm(User user, UserManager userManager)
         {
             InitializeComponent();
             InitializeTimer();
+            currentUser = user ?? throw new ArgumentNullException(nameof(user));
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
         private void WriteNumbersInOrderForm_Load(object sender, EventArgs e)
@@ -23,12 +27,11 @@ namespace Learn_App
 
         private void InitializeTimer()
         {
-            colorResetTimer = new Timer();
             colorResetTimer.Interval = 1200; // 1.2 seconds
             colorResetTimer.Tick += ColorResetTimer_Tick;
         }
 
-        private void ColorResetTimer_Tick(object sender, EventArgs e)
+        private void ColorResetTimer_Tick(object sender, EventArgs e) // Match signature with EventHandler
         {
             trfl.BackColor = System.Drawing.Color.White;
             colorResetTimer.Stop();
@@ -43,6 +46,7 @@ namespace Learn_App
             if (isCorrect)
             {
                 trfl.BackColor = System.Drawing.Color.Green;
+                userManager.UpdateUserPoints(currentUser, 1);
             }
             else
             {
@@ -64,17 +68,26 @@ namespace Learn_App
 
         private void lblInstruction_Click(object sender, EventArgs e)
         {
-
         }
 
         private void txtNumbers_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void trfl_Click(object sender, EventArgs e)
         {
+        }
 
+        private void label6_Click(object sender, EventArgs e)
+        {
+            var form = new MathGames(currentUser, userManager);
+            this.Hide();
+            form.Show();
+            form.FormClosed += (s, args) => this.Close();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
         }
     }
 }

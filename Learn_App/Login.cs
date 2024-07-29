@@ -24,7 +24,7 @@ namespace Learn_App
             try
             {
                 User user = userManager.AuthenticateUser(txtUsername.Text, txtPassword.Text);
-                var form = new MainPage(user);
+                var form = new MainPage(user,userManager);
                 this.Hide();
                 form.Show();
                 form.FormClosed += (s, args) => this.Close();

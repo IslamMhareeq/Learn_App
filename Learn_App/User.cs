@@ -1,7 +1,4 @@
-﻿
-
-namespace Learn_App
-
+﻿namespace Learn_App
 {
     public class User
     {
@@ -11,6 +8,8 @@ namespace Learn_App
         public string Email { get; set; }
         public string Gender { get; set; }
         public int Points { get; set; }
+
+        // Constructor for new user
         public User(string username, string password, string id, string email, string gender = null, int points = 0)
         {
             Username = username;
@@ -20,6 +19,10 @@ namespace Learn_App
             Gender = gender;
             Points = points;
         }
+
+        public bool VerifyPassword(string password)
+        {
+            return Password == password;
+        }
     }
-    
 }

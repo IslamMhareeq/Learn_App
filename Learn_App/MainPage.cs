@@ -13,11 +13,13 @@ namespace Learn_App
     public partial class MainPage : Form
     {
         private User currentUser;
+        private UserManager userManager;
 
-        public MainPage(User user)
+        public MainPage(User user, UserManager userManager)
         {
             InitializeComponent();
             currentUser = user;
+            this.userManager = userManager;
             DisplayUserName();
         }
 
@@ -28,7 +30,7 @@ namespace Learn_App
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var form = new MathGames();
+            var form = new MathGames(currentUser,userManager);
             this.Hide();
             form.Show();
             form.FormClosed += (s, args) => this.Close();
@@ -36,7 +38,7 @@ namespace Learn_App
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var form = new Hebrew();
+            var form = new Hebrew(currentUser,userManager);
             this.Hide();
             form.Show();
             form.FormClosed += (s, args) => this.Close();
@@ -44,10 +46,10 @@ namespace Learn_App
 
         private void buttonEnglish_Click(object sender, EventArgs e)
         {
-           /* var form = new English();
+            var form = new English(currentUser,userManager);
             this.Hide();
             form.Show();
-            form.FormClosed += (s, args) => this.Close();*/
+            form.FormClosed += (s, args) => this.Close();
         }
 
         private void Button_MouseEnter(object sender, EventArgs e)
@@ -117,7 +119,7 @@ namespace Learn_App
 
         private void label4_Click(object sender, EventArgs e)
         {
-            var form = new MainPage(currentUser);
+            var form = new MainPage(currentUser,userManager);
             this.Hide();
             form.Show();
             form.FormClosed += (s, args) => this.Close();
@@ -144,6 +146,10 @@ namespace Learn_App
 
         private void label2_Click(object sender, EventArgs e)
         {
+            var form = new ProfilePage(currentUser,userManager);
+            this.Hide();
+            form.Show();
+            form.FormClosed += (s, args) => this.Close();
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -160,6 +166,12 @@ namespace Learn_App
             var form = new LoginForm();
             this.Hide();
             form.Show();
+            form.FormClosed += (s, args) => this.Close();
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

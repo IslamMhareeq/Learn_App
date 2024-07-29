@@ -26,8 +26,8 @@
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.txtID = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
-            this.txtGender = new System.Windows.Forms.TextBox();
             this.btnRegister = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblUsername
@@ -113,14 +113,6 @@
             this.txtEmail.Size = new System.Drawing.Size(494, 55);
             this.txtEmail.TabIndex = 8;
             // 
-            // txtGender
-            // 
-            this.txtGender.Location = new System.Drawing.Point(375, 570);
-            this.txtGender.Margin = new System.Windows.Forms.Padding(8, 9, 8, 9);
-            this.txtGender.Name = "txtGender";
-            this.txtGender.Size = new System.Drawing.Size(494, 55);
-            this.txtGender.TabIndex = 9;
-            // 
             // btnRegister
             // 
             this.btnRegister.Location = new System.Drawing.Point(375, 690);
@@ -132,13 +124,21 @@
             this.btnRegister.UseVisualStyleBackColor = true;
             this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(375, 570);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(363, 56);
+            this.comboBox1.TabIndex = 11;
+            // 
             // RegisterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 900);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.btnRegister);
-            this.Controls.Add(this.txtGender);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.txtID);
             this.Controls.Add(this.txtPassword);
@@ -168,7 +168,7 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.TextBox txtID;
         private System.Windows.Forms.TextBox txtEmail;
-        private System.Windows.Forms.TextBox txtGender;
         private System.Windows.Forms.Button btnRegister;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

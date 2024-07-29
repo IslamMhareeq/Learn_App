@@ -11,13 +11,22 @@ namespace Learn_App
         {
             InitializeComponent();
             this.userManager = userManager;
+
+            // Add items to the ComboBox in the constructor
+            comboBox1.Items.Add("Male");
+            comboBox1.Items.Add("Female");
+            
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
             try
             {
-                userManager.RegisterUser(txtUsername.Text, txtPassword.Text, txtID.Text, txtEmail.Text, txtGender.Text);
+                // Get the selected gender from the ComboBox
+                string selectedGender = comboBox1.SelectedItem?.ToString();
+
+                // Register the user with the selected gender
+                userManager.RegisterUser(txtUsername.Text, txtPassword.Text, txtID.Text, txtEmail.Text, selectedGender);
                 MessageBox.Show("User registered successfully!");
                 this.Close();
             }
@@ -29,7 +38,7 @@ namespace Learn_App
 
         private void RegisterForm_Load(object sender, EventArgs e)
         {
-
+            // Additional initialization code if needed
         }
     }
 }

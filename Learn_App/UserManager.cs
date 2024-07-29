@@ -2,26 +2,37 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 namespace Learn_App
 {
     public class UserManager
     {
-        private string filePath = "users.csv";
-        private List<User> users;
+        private readonly string filePath = "users.csv";
+        private readonly List<User> users;
 
         public UserManager()
         {
             users = LoadUsers();
         }
 
-        // Save user to file
-        public void SaveUser(User user)
+        // Save all users to file
+        public void SaveAllUsers() // Change from private to public
         {
-            users.Add(user);
-            using (StreamWriter sw = new StreamWriter(filePath, true))
+            try
             {
-                string userRecord = $"{user.Username},{user.Password},{user.ID},{user.Email},{user.Gender}";
-                sw.WriteLine(userRecord);
+                using (StreamWriter sw = new StreamWriter(filePath, false))
+                {
+                    foreach (var user in users)
+                    {
+                        string userRecord = $"{user.Username},{user.Password},{user.ID},{user.Email},{user.Gender},{user.Points}";
+                        sw.WriteLine(userRecord);
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                // Log the exception (implementation depends on your logging framework)
+                Console.WriteLine("Error writing to file: " + ex.Message);
             }
         }
 
@@ -31,15 +42,23 @@ namespace Learn_App
             List<User> loadedUsers = new List<User>();
             if (File.Exists(filePath))
             {
-                using (StreamReader sr = new StreamReader(filePath))
+                try
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                    using (StreamReader sr = new StreamReader(filePath))
                     {
-                        string[] userDetails = line.Split(',');
-                        User user = new User(userDetails[0], userDetails[1], userDetails[2], userDetails[3], userDetails[4]);
-                        loadedUsers.Add(user);
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            string[] userDetails = line.Split(',');
+                            User user = new User(userDetails[0], userDetails[1], userDetails[2], userDetails[3], userDetails[4], int.Parse(userDetails[5]));
+                            loadedUsers.Add(user);
+                        }
                     }
+                }
+                catch (IOException ex)
+                {
+                    // Log the exception (implementation depends on your logging framework)
+                    Console.WriteLine("Error reading from file: " + ex.Message);
                 }
             }
             return loadedUsers;
@@ -48,16 +67,10 @@ namespace Learn_App
         // Register a new user
         public void RegisterUser(string username, string password, string id, string email, string gender = null, int points = 0)
         {
-            // Validate inputs
-            if (username.Length < 6 || username.Length > 8 || !username.All(char.IsLetterOrDigit) || username.Count(char.IsDigit) > 2)
-            {
-                throw new ArgumentException("Invalid username");
-            }
-
-            if (password.Length < 8 || password.Length > 10 || !password.Any(char.IsLetter) || !password.Any(char.IsDigit) || !password.Any(c => "!#$".Contains(c)))
-            {
-                throw new ArgumentException("Invalid password");
-            }
+            ValidateUsername(username);
+            ValidatePassword(password);
+            ValidateId(id);
+            ValidateEmail(email);
 
             // Check if user already exists
             if (users.Any(u => u.Username == username))
@@ -67,7 +80,40 @@ namespace Learn_App
 
             // Save the new user
             User newUser = new User(username, password, id, email, gender, points);
-            SaveUser(newUser);
+            users.Add(newUser);
+            SaveAllUsers();
+        }
+
+        private void ValidateUsername(string username)
+        {
+            if (username.Length < 6 || username.Length > 8 || !username.All(char.IsLetterOrDigit) || username.Count(char.IsDigit) > 2)
+            {
+                throw new ArgumentException("Invalid username");
+            }
+        }
+
+        private void ValidatePassword(string password)
+        {
+            if (password.Length < 8 || password.Length > 10 || !password.Any(char.IsLetter) || !password.Any(char.IsDigit) || !password.Any(c => "!#$".Contains(c)))
+            {
+                throw new ArgumentException("Invalid password");
+            }
+        }
+
+        private void ValidateId(string id)
+        {
+            if (id.Length != 9)
+            {
+                throw new ArgumentException("Invalid ID");
+            }
+        }
+
+        private void ValidateEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("Invalid email");
+            }
         }
 
         // Authenticate an existing user
@@ -78,20 +124,39 @@ namespace Learn_App
 
             if (user == null)
             {
-                // User with the given username does not exist
                 throw new UnauthorizedAccessException("Invalid username");
             }
-            else
-            if (user.Password != password)
+            if (!user.VerifyPassword(password))
             {
-                // Password is incorrect
                 throw new UnauthorizedAccessException("Invalid password");
             }
 
-            // Return the user if both username and password are correct
             return user;
         }
 
+        // Update user's points
+        public void UpdateUserPoints(User user, int pointsToAdd)
+        {
+            var existingUser = users.FirstOrDefault(u => u.Username == user.Username);
+            if (existingUser != null)
+            {
+                existingUser.Points += pointsToAdd;
+                SaveAllUsers();
+            }
+        }
+
+        // Update user details
+        public void UpdateUser(User user)
+        {
+            var existingUser = users.FirstOrDefault(u => u.Username == user.Username);
+            if (existingUser != null)
+            {
+                existingUser.Password = user.Password;
+                existingUser.Email = user.Email;
+                existingUser.Gender = user.Gender;
+                existingUser.Points = user.Points;
+                SaveAllUsers();
+            }
+        }
     }
 }
-//Cde2#678

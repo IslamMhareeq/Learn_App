@@ -7,27 +7,28 @@ namespace Learn_App
     {
         private Random random = new Random();
         private int start, step, missing1, missing2;
-        private Timer colorResetTimer;
+        private System.Windows.Forms.Timer colorResetTimer;
+        private User currentUser;
+        private UserManager userManager;
 
-        public CompleteSequencesForm()
+        public CompleteSequencesForm(User user, UserManager userManager)
         {
             InitializeComponent();
             InitializeTimer();
+            currentUser = user;
+            this.userManager = userManager;
         }
 
         private void txtNumber1_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void txtNumber2_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void trfl_Click(object sender, EventArgs e)
         {
-
         }
 
         private void CompleteSequencesForm_Load(object sender, EventArgs e)
@@ -37,9 +38,17 @@ namespace Learn_App
 
         private void InitializeTimer()
         {
-            colorResetTimer = new Timer();
+            colorResetTimer = new System.Windows.Forms.Timer();
             colorResetTimer.Interval = 1200; // 1.2 seconds
             colorResetTimer.Tick += ColorResetTimer_Tick;
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            var form = new MathGames(currentUser, userManager);
+            this.Hide();
+            form.Show();
+            form.FormClosed += (s, args) => this.Close();
         }
 
         private void ColorResetTimer_Tick(object sender, EventArgs e)
@@ -57,6 +66,7 @@ namespace Learn_App
             if (isNumber1Valid && isNumber2Valid && number1 == missing1 && number2 == missing2)
             {
                 trfl.BackColor = System.Drawing.Color.Green;
+                userManager.UpdateUserPoints(currentUser, 1);
             }
             else
             {
