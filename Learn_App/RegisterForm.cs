@@ -11,19 +11,33 @@ namespace Learn_App
         {
             InitializeComponent();
             this.userManager = userManager;
-
-            // Add items to the ComboBox in the constructor
-            comboBox1.Items.Add("Male");
-            comboBox1.Items.Add("Female");
-            
         }
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
             try
             {
-                // Get the selected gender from the ComboBox
-                string selectedGender = comboBox1.SelectedItem?.ToString();
+                // Validate that all required fields are filled out
+                if (string.IsNullOrEmpty(txtUsername.Text) ||
+                    string.IsNullOrEmpty(txtPassword.Text) ||
+                    string.IsNullOrEmpty(txtID.Text) ||
+                    string.IsNullOrEmpty(txtEmail.Text) ||
+                    (!radioButton2.Checked && !radioButton1.Checked))
+                {
+                    MessageBox.Show("Please fill out all fields.");
+                    return;
+                }
+
+                // Get the selected gender from the RadioButtons
+                string selectedGender = null;
+                if (radioButton2.Checked)
+                {
+                    selectedGender = "Male";
+                }
+                else if (radioButton1.Checked)
+                {
+                    selectedGender = "Female";
+                }
 
                 // Register the user with the selected gender
                 userManager.RegisterUser(txtUsername.Text, txtPassword.Text, txtID.Text, txtEmail.Text, selectedGender);
@@ -39,6 +53,16 @@ namespace Learn_App
         private void RegisterForm_Load(object sender, EventArgs e)
         {
             // Additional initialization code if needed
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            // Handle radio button checked change if needed
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            // Handle radio button checked change if needed
         }
     }
 }
